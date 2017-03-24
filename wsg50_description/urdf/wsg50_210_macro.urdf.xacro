@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot  xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find schunk_description)/urdf/common.xacro" />
-
   <xacro:macro name="wsg50_210" params="name parent *origin">
 
     <joint name="${name}_palm_joint" type="fixed">
