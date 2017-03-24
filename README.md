@@ -24,7 +24,7 @@ Todo: Restructure code
 See [https://code.google.com/p/wsg50-ros-pkg/wiki/wsg_50](https://code.google.com/p/wsg50-ros-pkg/wiki/wsg_50). Services currently block the reception of state updates.
 
 ### Topics
-* *~/goal\_position [IN, wsg_50_common/Cmd]*, in modes script, auto_update:<br/>
+* *~/goal\_position [IN, wsg50_common/Cmd]*, in modes script, auto_update:<br/>
 Position goal; send target position in mm and speed
 * *~/goal\_speed [IN, std_msgs/Float32]*, in mode script:<br/>
 Velocity goal (in mm/s); positive values open the gripper

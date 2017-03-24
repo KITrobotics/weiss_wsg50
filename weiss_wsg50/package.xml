@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>weiss_wsg50</name>
+  <version>0.0.1</version>
+  <description>The weiss_wsg50 metapackage package</description>
+
+  <maintainer email="denis.stogl@kit.edu">Denis Štogl</maintainer>
+  <license>TODO</license>
+
+  <url type="website">http://wiki.ros.org/wsg50</url>
+  <url type="repository">https://github.com/iirob/weiss_wsg50</url>
+  <url type="bugtracker">https://github.com/iirob/weiss_wsg50/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>wsg50_common</exec_depend>
+  <exec_depend>wsg50_driver</exec_depend>
+  <exec_depend>wsg50_simulation</exec_depend>
+
+  <export>
+      <metapackage />
+  </export>
+
+</package>
+
+
+

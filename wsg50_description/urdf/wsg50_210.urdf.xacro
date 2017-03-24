@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--Generates a urdf from the macro in kr16_2_macro.xacro -->
+<robot name="wsg50_210" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find schunk_description)/urdf/common.xacro" />
+
+  <link name="world"/>
+
+  <xacro:include filename="$(find wsg50_description)/urdf/wsg50_210_macro.urdf.xacro" />
+  <xacro:wsg50_210 name="wsg50_210" parent="world">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:wsg50_210>
+
+</robot>
+

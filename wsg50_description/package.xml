@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>wsg50_description</name>
+  <version>0.0.0</version>
+  <description>The wsg50_description package</description>
+
+  <maintainer email="denis.stogl@kit.edu">Denis Štogl</maintainer>
+  <license>TODO</license>
+
+  <url type="website">http://wiki.ros.org/wsg50</url>
+  <url type="repository">https://github.com/iirob/weiss_wsg50</url>
+  <url type="bugtracker">https://github.com/iirob/weiss_wsg50/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
