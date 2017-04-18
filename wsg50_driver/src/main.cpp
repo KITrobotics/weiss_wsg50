@@ -73,7 +73,7 @@
 // Typedefs, enums, structs
 //------------------------------------------------------------------------
 
-#define GRIPPER_MAX_OPEN 110.0
+#define GRIPPER_MAX_OPEN 210.0
 #define GRIPPER_MIN_OPEN 0.0
 
 //------------------------------------------------------------------------
@@ -105,11 +105,11 @@ float g_goal_position = NAN, g_goal_speed = NAN, g_speed = 10.0;
 
 bool moveSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= 110.0) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
   		ROS_INFO("Moving to %f position at %f mm/s.", req.width, req.speed);
 		res.error = move(req.width, req.speed, false);
-	}else if (req.width < 0.0 || req.width > 110.0){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - 110.0] ");
+	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
 		res.error = 255;
 		return false;
 	}else{
@@ -123,15 +123,15 @@ bool moveSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res
 
 bool graspSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= 110.0) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
         ROS_INFO("Grasping object at %f with %f mm/s.", req.width, req.speed);
 		res.error = grasp(req.width, req.speed);
-	}else if (req.width < 0.0 || req.width > 110.0){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - 110.0] ");
+	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
 		res.error = 255;
 		return false;
 	}else{
-	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - 110.0] / Speed: [0.1 - 420.0])  Using clamped values.");
+	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - GRIPPER_MAX_OPEN] / Speed: [0.1 - 420.0])  Using clamped values.");
 		res.error = grasp(req.width, req.speed);
 	}
 
@@ -185,15 +185,15 @@ bool incrementSrv(wsg50_common::Incr::Request &req, wsg50_common::Incr::Response
 
 bool releaseSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= 110.0) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
   		ROS_INFO("Releasing to %f position at %f mm/s.", req.width, req.speed);
 		res.error = release(req.width, req.speed);
-	}else if (req.width < 0.0 || req.width > 110.0){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - 110.0] ");
+	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
 		res.error = 255;
 		return false;
 	}else{
-	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - 110.0] / Speed: [0.1 - 420.0])  Using clamped values.");
+	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - GRIPPER_MAX_OPEN] / Speed: [0.1 - 420.0])  Using clamped values.");
 		res.error = release(req.width, req.speed);
 	}
 	ROS_INFO("Object released correctly.");
@@ -277,17 +277,17 @@ void timer_cb(const ros::TimerEvent& ev)
     } else if (g_mode_script) {
 		// ==== Call custom measure-and-move command ====
 		int res = 0;
-		if (!isnan(g_goal_position)) {
+		if (!std::isnan(g_goal_position)) {
 			ROS_INFO("Position command: pos=%5.1f, speed=%5.1f", g_goal_position, g_speed);
             res = script_measure_move(1, g_goal_position, g_speed, info);
-		} else if (!isnan(g_goal_speed)) {
+		} else if (!std::isnan(g_goal_speed)) {
 			ROS_INFO("Velocity command: speed=%5.1f", g_goal_speed);
             res = script_measure_move(2, 0, g_goal_speed, info);
 		} else
             res = script_measure_move(0, 0, 0, info);
-		if (!isnan(g_goal_position))
+		if (!std::isnan(g_goal_position))
 			g_goal_position = NAN;
-		if (!isnan(g_goal_speed))
+		if (!std::isnan(g_goal_speed))
 			g_goal_speed = NAN;
 
 		if (!res) {
@@ -321,19 +321,19 @@ void timer_cb(const ros::TimerEvent& ev)
 	// ==== Joint state msg ====
 	sensor_msgs::JointState joint_states;
 	joint_states.header.stamp = ros::Time::now();;
-	joint_states.header.frame_id = "wsg_50_gripper_base_link";
-		joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_left");
-	joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
-		joint_states.position.resize(2);
+	joint_states.header.frame_id = "";//"wsg_50_gripper_base_link";
+    joint_states.name.push_back("wsg50_210_finger_left_joint");
+// 	joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
+    joint_states.position.resize(1);
 
 	joint_states.position[0] = -info.position/2000.0;
-	joint_states.position[1] = info.position/2000.0;
-	joint_states.velocity.resize(2);		
+// 	joint_states.position[1] = info.position/2000.0;
+	joint_states.velocity.resize(1);
     joint_states.velocity[0] = info.speed/1000.0;
-    joint_states.velocity[1] = info.speed/1000.0;
-	joint_states.effort.resize(2);
+//     joint_states.velocity[1] = info.speed/1000.0;
+	joint_states.effort.resize(1);
 	joint_states.effort[0] = info.f_motor;
-	joint_states.effort[1] = info.f_motor;
+// 	joint_states.effort[1] = info.f_motor;
 	
 	g_pub_joint.publish(joint_states);
 
@@ -357,9 +357,10 @@ void read_thread(int interval_ms)
     wsg50_common::Status status_msg;
     status_msg.status = "UNKNOWN";
 
+    // TODO: Change this as above
     sensor_msgs::JointState joint_states;
     joint_states.header.frame_id = "wsg_50_gripper_base_link";
-    joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_left");
+    joint_states.name.push_back("wsg50_210_finger_left_joint");
     joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
     joint_states.position.resize(2);
     joint_states.velocity.resize(2);
@@ -522,23 +523,21 @@ int main( int argc, char **argv )
    ros::NodeHandle nh("~");
    signal(SIGINT, sigint_handler);
 
-   std::string ip, protocol, com_mode;
-   int port, local_port;
+   std::string ip, protocol, com_mode, serial_port;
+   int port, local_port, serial_baudrate;
    double rate, grasping_force;
    bool use_udp = false;
 
    nh.param("ip", ip, std::string("192.168.1.20"));
    nh.param("port", port, 1000);
    nh.param("local_port", local_port, 1501);
-   nh.param("protocol", protocol, std::string(""));
+   nh.param("serial_port", serial_port, std::string("/dev/tty1"));
+   nh.param("serial_baudrate", serial_baudrate, 115200);
+   nh.param("protocol", protocol, std::string("serial"));
    nh.param("com_mode", com_mode, std::string(""));
-   nh.param("rate", rate, 1.0); // With custom script, up to 30Hz are possible
+   nh.param("rate", rate, 5.0); // With custom script, up to 30Hz are possible
    nh.param("grasping_force", grasping_force, 0.0);
 
-   if (protocol == "udp")
-       use_udp = true;
-   else
-       protocol = "tcp";
    if (com_mode == "script")
        g_mode_script = true;
    else if (com_mode == "auto_update")
@@ -550,12 +549,17 @@ int main( int argc, char **argv )
 
    ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
 
-   // Connect to device using TCP/USP
-   int res_con;
-   if (!use_udp)
+   // Connect to device using Serial/TCP/UDPđ
+   int res_con = -1;
+    if (protocol == "serial")
+        res_con = cmd_connect_serial(serial_port.c_str(), serial_baudrate);
+   else if (protocol == "udp")
+       res_con = cmd_connect_udp(local_port, ip.c_str(), port );
+   else if (protocol == "tcp")
        res_con = cmd_connect_tcp( ip.c_str(), port );
    else
-       res_con = cmd_connect_udp(local_port, ip.c_str(), port );
+       ROS_ERROR("UNKNOWN protocol!");
+
 
    if (res_con == 0 ) {
         ROS_INFO("Gripper connection stablished");

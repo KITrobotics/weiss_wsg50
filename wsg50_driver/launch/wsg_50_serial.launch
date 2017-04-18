@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg_50_ip">
+	<param name="serial_port" type="string" value="192.168.1.20"/>
+	<param name="serial_baudrate" type="int" value="115200"/>
+	<param name="protocol" type="string" value="serial"/>
+  </node>
+
+</launch>
+
