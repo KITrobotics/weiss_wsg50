@@ -519,9 +519,14 @@ void sigint_handler(int sig) {
 
 int main( int argc, char **argv )
 {
+   std::cout << "started" << std::endl;
    ros::init(argc, argv, "wsg_50");
    ros::NodeHandle nh("~");
+   std::cout << "started" << std::endl;
    signal(SIGINT, sigint_handler);
+
+   std::cout << "started" << std::endl;
+   ROS_INFO("Started...");
 
    std::string ip, protocol, com_mode, serial_port;
    int port, local_port, serial_baudrate;
@@ -531,13 +536,14 @@ int main( int argc, char **argv )
    nh.param("ip", ip, std::string("192.168.1.20"));
    nh.param("port", port, 1000);
    nh.param("local_port", local_port, 1501);
-   nh.param("serial_port", serial_port, std::string("/dev/tty1"));
+   nh.param("serial_port", serial_port, std::string("/dev/ttyS1"));
    nh.param("serial_baudrate", serial_baudrate, 115200);
    nh.param("protocol", protocol, std::string("serial"));
    nh.param("com_mode", com_mode, std::string(""));
    nh.param("rate", rate, 5.0); // With custom script, up to 30Hz are possible
    nh.param("grasping_force", grasping_force, 0.0);
 
+   ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
    if (com_mode == "script")
        g_mode_script = true;
    else if (com_mode == "auto_update")
