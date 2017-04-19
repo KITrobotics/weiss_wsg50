@@ -101,7 +101,34 @@ float g_goal_position = NAN, g_goal_speed = NAN, g_speed = 10.0;
 //------------------------------------------------------------------------
 // Function implementation
 //------------------------------------------------------------------------
+void publish_status_and_joint_states(gripper_response info) {
+    // ==== Status msg ====
+    wsg50_common::Status status_msg;
+    status_msg.status = info.state_text;
+    status_msg.width = info.position;
+    status_msg.speed = info.speed;
+    status_msg.acc = info.acceleration;
+    status_msg.force = info.f_motor;
+    status_msg.force_finger0 = info.f_finger0;
+    status_msg.force_finger1 = info.f_finger1;
 
+    g_pub_state.publish(status_msg);
+
+    // ==== Joint state msg ====
+    sensor_msgs::JointState joint_states;
+    joint_states.header.stamp = ros::Time::now();;
+    joint_states.header.frame_id = "";//"wsg_50_gripper_base_link";
+    joint_states.name.push_back("wsg50_finger_left_joint");
+    joint_states.position.resize(1);
+
+    joint_states.position[0] = -info.position/2000.0;
+    joint_states.velocity.resize(1);
+    joint_states.velocity[0] = info.speed/1000.0;
+    joint_states.effort.resize(1);
+    joint_states.effort[0] = info.f_motor;
+
+    g_pub_joint.publish(joint_states);
+}
 
 bool moveSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
@@ -262,7 +289,7 @@ void timer_cb(const ros::TimerEvent& ev)
 {
 	// ==== Get state values by built-in commands ====
 	gripper_response info;
-	float acc = 0.0;
+	info.acceleration = 0.0;
 	info.speed = 0.0;
 
     if (g_mode_polling) {
@@ -271,7 +298,7 @@ void timer_cb(const ros::TimerEvent& ev)
             return;
         info.state_text = std::string(state);
 		info.position = getOpening();
-		acc = getAcceleration();
+		info.acceleration = getAcceleration();
 		info.f_motor = getForce();//getGraspingForce();
 
     } else if (g_mode_script) {
@@ -305,41 +332,10 @@ void timer_cb(const ros::TimerEvent& ev)
     } else
         return;
 
-	// ==== Status msg ====
-	wsg50_common::Status status_msg;
-	status_msg.status = info.state_text;
-	status_msg.width = info.position;
-	status_msg.speed = info.speed;
-	status_msg.acc = acc;
-	status_msg.force = info.f_motor;
-	status_msg.force_finger0 = info.f_finger0;
-	status_msg.force_finger1 = info.f_finger1;
-
-	g_pub_state.publish(status_msg);
-             
-
-	// ==== Joint state msg ====
-	sensor_msgs::JointState joint_states;
-	joint_states.header.stamp = ros::Time::now();;
-	joint_states.header.frame_id = "";//"wsg_50_gripper_base_link";
-    joint_states.name.push_back("wsg50_210_finger_left_joint");
-// 	joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
-    joint_states.position.resize(1);
-
-	joint_states.position[0] = -info.position/2000.0;
-// 	joint_states.position[1] = info.position/2000.0;
-	joint_states.velocity.resize(1);
-    joint_states.velocity[0] = info.speed/1000.0;
-//     joint_states.velocity[1] = info.speed/1000.0;
-	joint_states.effort.resize(1);
-	joint_states.effort[0] = info.f_motor;
-// 	joint_states.effort[1] = info.f_motor;
-	
-	g_pub_joint.publish(joint_states);
+	publish_status_and_joint_states(info);
 
 	// printf("Timer, last duration: %6.1f\n", ev.profile.last_duration.toSec() * 1000.0);
 }
-
 
 /** \brief Reads gripper responses in auto_update mode. The gripper pushes state messages in regular intervals. */
 void read_thread(int interval_ms)
@@ -354,13 +350,15 @@ void read_thread(int interval_ms)
     std::string names[3] = { "opening", "speed", "force" };
 
     // Prepare messages
+    gripper_response info;
+    info.status = "UNKNOWN";
     wsg50_common::Status status_msg;
     status_msg.status = "UNKNOWN";
 
     // TODO: Change this as above
     sensor_msgs::JointState joint_states;
     joint_states.header.frame_id = "wsg_50_gripper_base_link";
-    joint_states.name.push_back("wsg50_210_finger_left_joint");
+    joint_states.name.push_back("wsg50_finger_left_joint");
     joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
     joint_states.position.resize(2);
     joint_states.velocity.resize(2);
@@ -403,20 +401,20 @@ void read_thread(int interval_ms)
         switch (msg.id) {
         /*** Opening ***/
         case 0x43:
-            status_msg.width = val;
+            info.position = val;
             pub_state = true;
             cnt[0]++;
             break;
 
         /*** Speed ***/
         case 0x44:
-            status_msg.speed = val;
+            info.speed = val;
             cnt[1]++;
             break;
 
         /*** Force ***/
         case 0x45:
-            status_msg.force = val;
+            info.f_motor = val;
             cnt[2]++;
             break;
 
@@ -463,16 +461,7 @@ void read_thread(int interval_ms)
         // ***** PUBLISH state message & joint message
         if (pub_state) {
             pub_state = false;
-            g_pub_state.publish(status_msg);
-
-            joint_states.header.stamp = ros::Time::now();;
-            joint_states.position[0] = -status_msg.width/2000.0;
-            joint_states.position[1] = status_msg.width/2000.0;
-            joint_states.velocity[0] = status_msg.speed/1000.0;
-            joint_states.velocity[1] = status_msg.speed/1000.0;
-            joint_states.effort[0] = status_msg.force;
-            joint_states.effort[1] = status_msg.force;
-            g_pub_joint.publish(joint_states);
+            publish_status_and_joint_states(info);
         }
 
         // Check # of received messages regularly
@@ -531,7 +520,7 @@ int main( int argc, char **argv )
    nh.param("ip", ip, std::string("192.168.1.20"));
    nh.param("port", port, 1000);
    nh.param("local_port", local_port, 1501);
-   nh.param("serial_port", serial_port, std::string("/dev/tty1"));
+   nh.param("serial_port", serial_port, std::string("/dev/ttyS1"));
    nh.param("serial_baudrate", serial_baudrate, 115200);
    nh.param("protocol", protocol, std::string("serial"));
    nh.param("com_mode", com_mode, std::string(""));

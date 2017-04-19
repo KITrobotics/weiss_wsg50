@@ -50,7 +50,7 @@ extern "C" {
 typedef struct {
 	unsigned int state;
 	bool ismoving;
-	float position, speed;
+	float position, speed, acceleration;
 	float f_motor, f_finger0, f_finger1;
 	std::string state_text;
 } gripper_response;

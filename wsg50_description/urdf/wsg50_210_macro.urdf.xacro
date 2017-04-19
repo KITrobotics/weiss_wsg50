@@ -21,18 +21,18 @@
             <mesh filename="package://wsg50_description/meshes/palm.dae" />
          </geometry>
       </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <geometry>
-            <mesh filename="package://wsg50_description/meshes/palm.stl" scale="0.001 0.001 0.001" />
-        </geometry>
-      </collision>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
             <mesh filename="package://wsg50_description/meshes/black_plate.dae" />
          </geometry>
       </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/palm.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
     </link>
 
     <joint name="${name}_finger_left_joint" type="prismatic" >
