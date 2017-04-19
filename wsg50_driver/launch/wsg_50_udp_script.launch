@@ -1,15 +1,16 @@
+<?xml version="1.0"?>
 <launch>
   <arg name="com_mode" default="script" />
 
-  <node  name="wsg50_driver"  pkg="wsg50_driver" type="wsg_50_ip" output="screen">
-	  <param name="ip" type="string" value="192.168.20.2"/>
-	  <param name="port" type="int" value="1500"/>
-	  <param name="local_port" type="int" value="5501"/>
-    <param name="protocol" type="string" value="udp"/>
-    <param name="com_mode" type="string" value="$(arg com_mode)"/>
-    <param name="rate" type="double" value="50"/>
-    <param name="grasping_force" type="double" value="80"/>
-  </node>
+  <include file="$(find wsg50_driver)/launch/wsg50.launch">
+        <arg name="ip" value="192.168.20.2"/>
+        <arg name="port" value="1500"/>
+        <arg name="local_port" value="5501"/>
+        <arg name="protocol" value="udp"/>
+        <arg name="com_mode" value="$(arg com_mode)"/>
+        <arg name="rate" value="50"/>
+        <arg name="grasping_force" value="80"/>
+    </include>
 
 </launch>
 

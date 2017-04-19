@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot  xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="wsg50_210" params="name parent *origin">
+  <xacro:macro name="wsg50" params="name parent *origin">
 
     <joint name="${name}_palm_joint" type="fixed">
         <insert_block name="origin"/>
@@ -18,7 +18,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-            <mesh filename="package://wsg50_description/meshes/palm.dae" />
+            <mesh filename="package://wsg50_description/meshes/palm_210.dae" />
          </geometry>
       </visual>
       <visual>
@@ -30,7 +30,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-            <mesh filename="package://wsg50_description/meshes/palm.stl" scale="0.001 0.001 0.001" />
+            <mesh filename="package://wsg50_description/meshes/palm_210.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
     </link>

@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
-  <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg_50_ip" output="screen">
-	<param name="serial_port" type="string" value="/dev/ttyS1"/>
-	<param name="serial_baudrate" type="int" value="115200"/>
-	<param name="protocol" type="string" value="serial"/>
-  </node>
+    <include file="$(find wsg50_driver)/launch/wsg50.launch">
+        <arg name="protocol" value="serial"/>
+        <arg name="serial_port" value="/dev/ttyS1"/>
+        <arg name="serial_baudrate" value="115200"/>
+        <arg name="rate" value="10"/>
+    </include>
 
 </launch>
 

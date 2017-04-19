@@ -73,7 +73,6 @@
 // Typedefs, enums, structs
 //------------------------------------------------------------------------
 
-#define GRIPPER_MAX_OPEN 210.0
 #define GRIPPER_MIN_OPEN 0.0
 
 //------------------------------------------------------------------------
@@ -83,8 +82,8 @@
 float increment;
 bool objectGraspped;
 
-int g_timer_cnt = 0;
 ros::Publisher g_pub_state, g_pub_joint, g_pub_moving;
+int g_timer_cnt = 0, g_size;
 bool g_ismoving = false, g_mode_script = false, g_mode_periodic = false, g_mode_polling = false;
 float g_goal_position = NAN, g_goal_speed = NAN, g_speed = 10.0;
    
@@ -132,11 +131,11 @@ void publish_status_and_joint_states(gripper_response info) {
 
 bool moveSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= g_size) && (req.speed > 0.0 && req.speed <= 420.0) ){
   		ROS_INFO("Moving to %f position at %f mm/s.", req.width, req.speed);
 		res.error = move(req.width, req.speed, false);
-	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
+	}else if (req.width < 0.0 || req.width > g_size){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - %d] ", g_size);
 		res.error = 255;
 		return false;
 	}else{
@@ -150,15 +149,15 @@ bool moveSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res
 
 bool graspSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= g_size) && (req.speed > 0.0 && req.speed <= 420.0) ){
         ROS_INFO("Grasping object at %f with %f mm/s.", req.width, req.speed);
 		res.error = grasp(req.width, req.speed);
-	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
+	}else if (req.width < 0.0 || req.width > g_size){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - %d] ", g_size);
 		res.error = 255;
 		return false;
 	}else{
-	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - GRIPPER_MAX_OPEN] / Speed: [0.1 - 420.0])  Using clamped values.");
+	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - %d] / Speed: [0.1 - 420.0])  Using clamped values.", g_size);
 		res.error = grasp(req.width, req.speed);
 	}
 
@@ -175,18 +174,18 @@ bool incrementSrv(wsg50_common::Incr::Request &req, wsg50_common::Incr::Response
 		
 			float currentWidth = getOpening();
 			float nextWidth = currentWidth + req.increment;
-			if ( (currentWidth < GRIPPER_MAX_OPEN) && nextWidth < GRIPPER_MAX_OPEN ){
+			if ( (currentWidth < g_size) && nextWidth < g_size ){
 				//grasp(nextWidth, 1);
 				move(nextWidth,20, true);
 				currentWidth = nextWidth;
-			}else if( nextWidth >= GRIPPER_MAX_OPEN){
-				//grasp(GRIPPER_MAX_OPEN, 1);
-				move(GRIPPER_MAX_OPEN,1, true);
-				currentWidth = GRIPPER_MAX_OPEN;
+			}else if( nextWidth >= g_size){
+				//grasp(g_size, 1);
+				move(g_size,1, true);
+				currentWidth = g_size;
 			}
 		}else{
 			ROS_INFO("Releasing object...");
-			release(GRIPPER_MAX_OPEN, 20);
+			release(g_size, 20);
 			objectGraspped = false;
 		}
 	}else if (req.direction == "close"){
@@ -212,15 +211,15 @@ bool incrementSrv(wsg50_common::Incr::Request &req, wsg50_common::Incr::Response
 
 bool releaseSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &res)
 {
-	if ( (req.width >= 0.0 && req.width <= GRIPPER_MAX_OPEN) && (req.speed > 0.0 && req.speed <= 420.0) ){
+	if ( (req.width >= 0.0 && req.width <= g_size) && (req.speed > 0.0 && req.speed <= 420.0) ){
   		ROS_INFO("Releasing to %f position at %f mm/s.", req.width, req.speed);
 		res.error = release(req.width, req.speed);
-	}else if (req.width < 0.0 || req.width > GRIPPER_MAX_OPEN){
-		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - GRIPPER_MAX_OPEN] ");
+	}else if (req.width < 0.0 || req.width > g_size){
+		ROS_ERROR("Imposible to move to this position. (Width values: [0.0 - g_size] ");
 		res.error = 255;
 		return false;
 	}else{
-	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - GRIPPER_MAX_OPEN] / Speed: [0.1 - 420.0])  Using clamped values.");
+	        ROS_WARN("Speed or position values are outside the gripper's physical limits (Position: [0.0 - g_size] / Speed: [0.1 - 420.0])  Using clamped values.");
 		res.error = release(req.width, req.speed);
 	}
 	ROS_INFO("Object released correctly.");
@@ -351,9 +350,7 @@ void read_thread(int interval_ms)
 
     // Prepare messages
     gripper_response info;
-    info.status = "UNKNOWN";
-    wsg50_common::Status status_msg;
-    status_msg.status = "UNKNOWN";
+    info.state_text = "UNKNOWN";
 
     // TODO: Change this as above
     sensor_msgs::JointState joint_states;
@@ -513,10 +510,11 @@ int main( int argc, char **argv )
    signal(SIGINT, sigint_handler);
 
    std::string ip, protocol, com_mode, serial_port;
-   int port, local_port, serial_baudrate;
+   int size, port, local_port, serial_baudrate;
    double rate, grasping_force;
    bool use_udp = false;
 
+   nh.param("size", size, 210);
    nh.param("ip", ip, std::string("192.168.1.20"));
    nh.param("port", port, 1000);
    nh.param("local_port", local_port, 1501);
@@ -526,6 +524,14 @@ int main( int argc, char **argv )
    nh.param("com_mode", com_mode, std::string(""));
    nh.param("rate", rate, 5.0); // With custom script, up to 30Hz are possible
    nh.param("grasping_force", grasping_force, 0.0);
+
+   if (size != 210 or size != 110) {
+       ROS_WARN("Gripper size: %d is invalid. Using default size of 210 mm.", size);
+       g_size = 210;
+  }
+  else {
+      g_size = size;
+  }
 
    if (com_mode == "script")
        g_mode_script = true;

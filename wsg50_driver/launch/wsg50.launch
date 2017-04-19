@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="size" default="" />
+    <arg name="ip" default="" />
+    <arg name="port" default="" />
+    <arg name="local_port" default="" />
+    <arg name="serial_port" default="" />
+    <arg name="serial_baudrate" default="" />
+    <arg name="protocol" default="" />
+    <arg name="com_mode" default="" />
+    <arg name="rate" default="" />
+    <arg name="grasping_force" default="" />
+
+    <param name="gripper_description" command="$(find xacro)/xacro --inorder '$(find wsg50_description)/urdf/wsg50_$(arg size).urdf.xacro'"/>
+
+    <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg50" output="screen">
+        <param name="size" value="$(arg size)"/>
+        <param name="ip" value="$(arg ip)"/>
+        <param name="port" value="$(arg port)"/>
+        <param name="local_port" value="$(arg local_port)"/>
+        <param name="serial_port" value="$(arg serial_port)"/>
+        <param name="serial_baudrate" value="$(arg serial_baudrate)"/>
+        <param name="protocol" value="$(arg protocol)"/>
+        <param name="com_mode" value="$(arg com_mode)"/>
+        <param name="rate" value="$(arg rate)"/>
+        <param name="grasping_force" value="$(arg grasping_force)"/>
+    </node>
+
+</launch>
+
