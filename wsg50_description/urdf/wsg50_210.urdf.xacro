@@ -2,7 +2,7 @@
 <!--Generates a urdf from the macro in kr16_2_macro.xacro -->
 <robot name="wsg50_210" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find schunk_description)/urdf/common.xacro" />
+  <xacro:property name="M_PI" value="3.1415926535897931" />
 
   <link name="world"/>
 

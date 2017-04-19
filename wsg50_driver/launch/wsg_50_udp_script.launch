@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="size" default="210" />
   <arg name="com_mode" default="script" />
 
   <include file="$(find wsg50_driver)/launch/wsg50.launch">
