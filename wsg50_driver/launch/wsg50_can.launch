@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
-  <node  name="wsg_50_can"  pkg="wsg_50" type="wsg_50_can">
-	<param name="device" type="string" value="/dev/pcan32"/>
-  </node>
+    <arg name="size" default="210" />
+
+    <node  name="wsg_50_can"  pkg="wsg_50" type="wsg_50_can">
+        <param name="size" value="$(arg size)"/>
+        <param name="device" type="string" value="/dev/pcan32"/>
+    </node>
 
 </launch>
 

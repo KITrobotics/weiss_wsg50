@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <launch>
 
+    <arg name="size" default="210" />
+
     <include file="$(find wsg50_driver)/launch/wsg50.launch">
+        <arg name="size" value="$(arg size)"/>
         <arg name="protocol" value="serial"/>
         <arg name="serial_port" value="/dev/ttyS1"/>
         <arg name="serial_baudrate" value="115200"/>
