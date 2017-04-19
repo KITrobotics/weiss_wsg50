@@ -536,22 +536,25 @@ int main( int argc, char **argv )
        g_mode_polling = true;
    }
 
-   ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
-
    // Connect to device using Serial/TCP/UDPđ
    int res_con = -1;
-    if (protocol == "serial")
+    if (protocol == "serial") {
         res_con = cmd_connect_serial(serial_port.c_str(), serial_baudrate);
-   else if (protocol == "udp")
-       res_con = cmd_connect_udp(local_port, ip.c_str(), port );
-   else if (protocol == "tcp")
-       res_con = cmd_connect_tcp( ip.c_str(), port );
-   else
-       ROS_ERROR("UNKNOWN protocol!");
-
-
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", serial_port.c_str(), serial_baudrate, protocol.c_str(), com_mode.c_str());
+    }
+    else if (protocol == "udp") {
+        res_con = cmd_connect_udp(local_port, ip.c_str(), port );
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
+    }
+    else if (protocol == "tcp") {
+        res_con = cmd_connect_tcp( ip.c_str(), port );
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
+    }
+    else {
+        ROS_ERROR("UNKNOWN protocol!");
+    }
    if (res_con == 0 ) {
-        ROS_INFO("Gripper connection stablished");
+        ROS_INFO("Gripper connection established");
 
 		// Services
         ros::ServiceServer moveSS, graspSS, releaseSS, homingSS, stopSS, ackSS, incrementSS, setAccSS, setForceSS;
