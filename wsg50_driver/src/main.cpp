@@ -519,14 +519,9 @@ void sigint_handler(int sig) {
 
 int main( int argc, char **argv )
 {
-   std::cout << "started" << std::endl;
    ros::init(argc, argv, "wsg_50");
    ros::NodeHandle nh("~");
-   std::cout << "started" << std::endl;
    signal(SIGINT, sigint_handler);
-
-   std::cout << "started" << std::endl;
-   ROS_INFO("Started...");
 
    std::string ip, protocol, com_mode, serial_port;
    int port, local_port, serial_baudrate;
@@ -543,7 +538,6 @@ int main( int argc, char **argv )
    nh.param("rate", rate, 5.0); // With custom script, up to 30Hz are possible
    nh.param("grasping_force", grasping_force, 0.0);
 
-   ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
    if (com_mode == "script")
        g_mode_script = true;
    else if (com_mode == "auto_update")
@@ -553,22 +547,25 @@ int main( int argc, char **argv )
        g_mode_polling = true;
    }
 
-   ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
-
    // Connect to device using Serial/TCP/UDPđ
    int res_con = -1;
-    if (protocol == "serial")
+    if (protocol == "serial") {
         res_con = cmd_connect_serial(serial_port.c_str(), serial_baudrate);
-   else if (protocol == "udp")
-       res_con = cmd_connect_udp(local_port, ip.c_str(), port );
-   else if (protocol == "tcp")
-       res_con = cmd_connect_tcp( ip.c_str(), port );
-   else
-       ROS_ERROR("UNKNOWN protocol!");
-
-
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", serial_port.c_str(), serial_baudrate, protocol.c_str(), com_mode.c_str());
+    }
+    else if (protocol == "udp") {
+        res_con = cmd_connect_udp(local_port, ip.c_str(), port );
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
+    }
+    else if (protocol == "tcp") {
+        res_con = cmd_connect_tcp( ip.c_str(), port );
+        ROS_INFO("Connecting to %s:%d (%s); communication mode: %s ...", ip.c_str(), port, protocol.c_str(), com_mode.c_str());
+    }
+    else {
+        ROS_ERROR("UNKNOWN protocol!");
+    }
    if (res_con == 0 ) {
-        ROS_INFO("Gripper connection stablished");
+        ROS_INFO("Gripper connection established");
 
 		// Services
         ros::ServiceServer moveSS, graspSS, releaseSS, homingSS, stopSS, ackSS, incrementSS, setAccSS, setForceSS;
