@@ -52,10 +52,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wsg_50/common.h"
-#include "wsg_50/checksum.h"
-#include "wsg_50/interface.h"
-#include "wsg_50/msg.h"
+#include "wsg50/common.h"
+#include "wsg50/checksum.h"
+#include "wsg50/interface.h"
+#include "wsg50/msg.h"
 
 
 //------------------------------------------------------------------------

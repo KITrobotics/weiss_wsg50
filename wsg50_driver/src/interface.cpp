@@ -51,13 +51,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "wsg_50/common.h"
-#include "wsg_50/interface.h"
+#include "wsg50/common.h"
+#include "wsg50/interface.h"
 
 // Available interfaces
-#include "wsg_50/tcp.h"
-#include "wsg_50/udp.h"
-#include "wsg_50/serial.h"
+#include "wsg50/tcp.h"
+#include "wsg50/udp.h"
+#include "wsg50/serial.h"
 
 
 //------------------------------------------------------------------------

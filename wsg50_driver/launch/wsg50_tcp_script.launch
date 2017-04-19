@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="com_mode" default="script" /><!-- or auto_update, polling -->
+
+  <include file="$(find wsg50_driver)/launch/wsg50.launch">
+        <arg name="ip" value="192.168.20.2"/>
+        <arg name="port" value="1500"/>
+        <arg name="protocol" value="tcp"/>
+        <arg name="com_mode" value="$(arg com_mode)"/>
+        <arg name="rate" value="50"/>
+        <arg name="grasping_force" value="80"/>
+    </include>
+
+</launch>

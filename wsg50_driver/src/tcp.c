@@ -52,8 +52,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wsg_50/interface.h"
-#include "wsg_50/tcp.h"
+#include "wsg50/interface.h"
+#include "wsg50/tcp.h"
 
 
 //------------------------------------------------------------------------

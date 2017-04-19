@@ -54,10 +54,10 @@
 #include <cmath>
 #include <string>
 
-#include "wsg_50/common.h"
-#include "wsg_50/cmd.h"
-#include "wsg_50/msg.h"
-#include "wsg_50/functions.h"
+#include "wsg50/common.h"
+#include "wsg50/cmd.h"
+#include "wsg50/msg.h"
+#include "wsg50/functions.h"
 
 //------------------------------------------------------------------------
 // Support functions

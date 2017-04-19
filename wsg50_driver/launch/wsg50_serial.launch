@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find wsg50_driver)/launch/wsg50.launch">
+        <arg name="protocol" value="serial"/>
+        <arg name="serial_port" value="/dev/ttyS1"/>
+        <arg name="serial_baudrate" value="115200"/>
+        <arg name="rate" value="10"/>
+    </include>
+
+</launch>
+

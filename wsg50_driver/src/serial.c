@@ -64,8 +64,8 @@
 	#include <sys/stat.h>
 #endif
 
-#include "wsg_50/interface.h"
-#include "wsg_50/serial.h"
+#include "wsg50/interface.h"
+#include "wsg50/serial.h"
 
 
 //------------------------------------------------------------------------

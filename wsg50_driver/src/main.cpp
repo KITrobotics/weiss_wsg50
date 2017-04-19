@@ -45,10 +45,10 @@
 #include <thread>
 #include <chrono>
 
-#include "wsg_50/common.h"
-#include "wsg_50/cmd.h"
-#include "wsg_50/msg.h"
-#include "wsg_50/functions.h"
+#include "wsg50/common.h"
+#include "wsg50/cmd.h"
+#include "wsg50/msg.h"
+#include "wsg50/functions.h"
 
 #include <ros/ros.h>
 #include "std_msgs/String.h"
@@ -116,7 +116,7 @@ void publish_status_and_joint_states(gripper_response info) {
     // ==== Joint state msg ====
     sensor_msgs::JointState joint_states;
     joint_states.header.stamp = ros::Time::now();;
-    joint_states.header.frame_id = "";//"wsg_50_gripper_base_link";
+    joint_states.header.frame_id = "";//"wsg50_gripper_base_link";
     joint_states.name.push_back("wsg50_finger_left_joint");
     joint_states.position.resize(1);
 
@@ -354,9 +354,9 @@ void read_thread(int interval_ms)
 
     // TODO: Change this as above
     sensor_msgs::JointState joint_states;
-    joint_states.header.frame_id = "wsg_50_gripper_base_link";
+    joint_states.header.frame_id = "wsg50_gripper_base_link";
     joint_states.name.push_back("wsg50_finger_left_joint");
-    joint_states.name.push_back("wsg_50_gripper_base_joint_gripper_right");
+    joint_states.name.push_back("wsg50_gripper_base_joint_gripper_right");
     joint_states.position.resize(2);
     joint_states.velocity.resize(2);
     joint_states.effort.resize(2);
@@ -505,7 +505,7 @@ void sigint_handler(int sig) {
 
 int main( int argc, char **argv )
 {
-   ros::init(argc, argv, "wsg_50");
+   ros::init(argc, argv, "wsg50");
    ros::NodeHandle nh("~");
    signal(SIGINT, sigint_handler);
 

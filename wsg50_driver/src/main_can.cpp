@@ -43,9 +43,9 @@
 #include <assert.h>
 #include <fcntl.h> 
 
-#include "wsg_50/common.h"
-#include "wsg_50/functions_can.h"
-//#include "wsg_50/cmd.h"
+#include "wsg50/common.h"
+#include "wsg50/functions_can.h"
+//#include "wsg50/cmd.h"
 
 /// ROS
 #include <ros/ros.h>
@@ -228,7 +228,7 @@ bool ackSrv(std_srvs::Empty::Request &req, std_srvs::Empty::Request &res)
 
 int main( int argc, char **argv )
 {
-   ros::init(argc, argv, "wsg_50_can");
+   ros::init(argc, argv, "wsg50_can");
 
    ros::NodeHandle nh("~");
    std::string device_;

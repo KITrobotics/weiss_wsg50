@@ -53,7 +53,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wsg_50/common.h"
+#include "wsg50/common.h"
 
 
 //------------------------------------------------------------------------

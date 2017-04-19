@@ -45,11 +45,11 @@
 #include <unistd.h>
 #include <fcntl.h> 
 
-#include "wsg_50/functions_can.h"
-#include "wsg_50/checksum.h"
-#include "wsg_50/common.h"
-#include "wsg_50/msg.h"
-#include "wsg_50/aux_.h"
+#include "wsg50/functions_can.h"
+#include "wsg50/checksum.h"
+#include "wsg50/common.h"
+#include "wsg50/msg.h"
+#include "wsg50/aux_.h"
 
 //------------------------------------------------------------------------
 // Support functions
