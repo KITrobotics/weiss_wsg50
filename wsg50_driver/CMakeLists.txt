@@ -24,16 +24,16 @@ catkin_package(
 
 # WSG_50_TCP version
 set(DRIVER_SOURCES 
-  src/checksum.cpp include/wsg_50/checksum.h
-  src/cmd.c include/wsg_50/cmd.h
-  src/common.cpp include/wsg_50/common.h
-  src/functions.cpp include/wsg_50/functions.h
-  src/interface.cpp include/wsg_50/interface.h
+  src/checksum.cpp include/wsg50/checksum.h
+  src/cmd.c include/wsg50/cmd.h
+  src/common.cpp include/wsg50/common.h
+  src/functions.cpp include/wsg50/functions.h
+  src/interface.cpp include/wsg50/interface.h
   src/main.cpp
-  src/msg.c include/wsg_50/msg.h
-  src/serial.c include/wsg_50/serial.h
-  src/tcp.c include/wsg_50/tcp.h
-  src/udp.c include/wsg_50/udp.h)
+  src/msg.c include/wsg50/msg.h
+  src/serial.c include/wsg50/serial.h
+  src/tcp.c include/wsg50/tcp.h
+  src/udp.c include/wsg50/udp.h)
 
 # WSG_50_CAN version
 set(DRIVER_SOURCES_CAN
@@ -64,16 +64,16 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-add_executable(wsg_50_ip src/main.cpp ${DRIVER_SOURCES})
-target_link_libraries(wsg_50_ip ${catkin_LIBRARIES})
-add_dependencies(wsg_50_ip wsg50_common_gencpp)
+add_executable(wsg50 src/main.cpp ${DRIVER_SOURCES})
+target_link_libraries(wsg50 ${catkin_LIBRARIES})
+add_dependencies(wsg50 wsg50_common_gencpp)
 
-#add_executable(wsg_50_can src/main_can.cpp src/checksum.cpp src/msg.c src/common.cpp src/functions_can.cpp)
-#add_executable(wsg_50_can src/main_can.cpp ${DRIVER_SOURCES_CAN})
+#add_executable(wsg50_can src/main_can.cpp src/checksum.cpp src/msg.c src/common.cpp src/functions_can.cpp)
+#add_executable(wsg50_can src/main_can.cpp ${DRIVER_SOURCES_CAN})
 
 #include_directories(/home/marc/peak-linux-driver-7.5/driver/src/)
 #link_directories(/home/marc/peak-linux-driver-7.5/lib/)
-#add_compile_flags(wsg_50_can -g -Wall)
-#target_link_libraries(wsg_50_can pcan)
+#add_compile_flags(wsg50_can -g -Wall)
+#target_link_libraries(wsg50_can pcan)
 
 

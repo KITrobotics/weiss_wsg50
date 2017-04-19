@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot  xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="wsg50" params="name parent *origin">
+  <xacro:macro name="wsg50_210" params="name parent *origin">
 
     <joint name="${name}_palm_joint" type="fixed">
         <insert_block name="origin"/>
