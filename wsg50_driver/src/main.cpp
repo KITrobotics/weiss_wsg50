@@ -120,7 +120,7 @@ void publish_status_and_joint_states(gripper_response info) {
     joint_states.name.push_back("wsg50_finger_left_joint");
     joint_states.position.resize(1);
 
-    joint_states.position[0] = -info.position/2000.0;
+    joint_states.position[0] = info.position/2000.0;
     joint_states.velocity.resize(1);
     joint_states.velocity[0] = info.speed/1000.0;
     joint_states.effort.resize(1);
@@ -351,15 +351,6 @@ void read_thread(int interval_ms)
     // Prepare messages
     gripper_response info;
     info.state_text = "UNKNOWN";
-
-    // TODO: Change this as above
-    sensor_msgs::JointState joint_states;
-    joint_states.header.frame_id = "wsg50_gripper_base_link";
-    joint_states.name.push_back("wsg50_finger_left_joint");
-    joint_states.name.push_back("wsg50_gripper_base_joint_gripper_right");
-    joint_states.position.resize(2);
-    joint_states.velocity.resize(2);
-    joint_states.effort.resize(2);
 
     // Request automatic updates (error checking is done below)
     getOpening(interval_ms);
