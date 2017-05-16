@@ -2,8 +2,6 @@
 <!--Generates a urdf from the macro in kr16_2_macro.xacro -->
 <robot name="wsg50_210" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:property name="M_PI" value="3.1415926535897931" />
-
   <link name="world"/>
 
   <xacro:include filename="$(find wsg50_description)/urdf/wsg50_210_macro.urdf.xacro" />
