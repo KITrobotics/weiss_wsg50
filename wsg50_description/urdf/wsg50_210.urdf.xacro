@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--Generates a urdf from the macro in kr16_2_macro.xacro -->
-<robot name="wsg50_210" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="wsg50_210" xmlns:xacro="http://wiki.ros.org/xacro">
 
   <link name="world"/>
 
