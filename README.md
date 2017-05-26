@@ -7,6 +7,15 @@ Existing features are not discussed here - see original Wiki: [https://code.goog
 
 Todo: Restructure code
 
+## ROS Distro Support
+
+|         | Indigo | Kinetic |
+|:-------:|:------:|:-------:|
+| Branch  | [`indigo-devel`](https://github.com/iirob/weiss_wsg50/tree/indigo-devel) | [`kinetic_devel`](https://github.com/iirob/weiss_wsg50/tree/kinetic-devel) |
+| Status  | [![Build Status](https://travis-ci.org/iirob/weiss_wsg50.svg?branch=indigo-devel)](https://travis-ci.org/iirob/weiss_wsg50) | [![Build Status](https://travis-ci.org/iirob/weiss_wsg50.svg?branch=kinetic-devel)](https://travis-ci.org/iirob/weiss_wsg50) |
+| Version | [version](http://repositories.ros.org/status_page/ros_indigo_default.html?q=weiss_wsg50) | [version](http://repositories.ros.org/status_page/ros_kinetic_default.html?q=weiss_wsg50) |
+
+
 
 ## Node wsg\_50\_ip (was: wsg\_50_tcp)
 
