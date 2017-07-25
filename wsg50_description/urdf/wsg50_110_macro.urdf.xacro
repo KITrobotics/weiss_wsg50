@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot  xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:macro name="wsg50_110" params="name parent *origin">
+
+    <joint name="${name}_palm_joint" type="fixed">
+        <xacro:insert_block name="origin"/>
+        <parent link="${parent}"/>
+        <child link="${name}_palm_link"/>
+    </joint>
+
+    <link name="${name}_palm_link">
+      <inertial>
+          <mass value="0.25" />
+          <origin xyz="0 0 0" />
+          <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/palm_110.stl" />
+         </geometry>
+      </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/black_plate.dae" />
+         </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/palm_110.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_finger_left_joint" type="prismatic" >
+      <origin xyz="0 0 0.0719" rpy="0 0 0"/>
+      <parent link="${name}_palm_link" />
+      <child link="${name}_finger_left_link" />
+      <axis xyz="1 0 0" />
+      <limit effort="10" lower="0" upper="0.055" velocity="0.42"/>
+    </joint>
+
+    <link name="${name}_finger_left_link">
+      <inertial>
+          <mass value="0.25" />
+          <origin xyz="0 0 0" />
+          <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/finger.dae" />
+         </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/finger.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_finger_right_joint" type="prismatic" >
+      <origin xyz="0 0 0.0719" rpy="0 0 ${pi}"/>
+      <parent link="${name}_palm_link" />
+      <child link="${name}_finger_right_link" />
+      <axis xyz="1 0 0" />
+      <limit effort="10" lower="0" upper="0.055" velocity="0.42"/>
+      <mimic joint="${name}_finger_left_joint" multiplier="1" offset="0"/>
+    </joint>
+
+    <link name="${name}_finger_right_link">
+      <inertial>
+          <mass value="0.25" />
+          <origin xyz="0 0 0" />
+          <inertia  ixx="1.0" ixy="0.0"  ixz="0.0"  iyy="1.0"  iyz="0.0"  izz="1.0" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/finger.dae" />
+         </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://wsg50_description/meshes/finger.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+</robot>
+
