@@ -1,6 +1,6 @@
 -- Nicolas Alt, 2014-09-04
 -- Command-and-measure script
--- Works with extended wsg_50 ROS package
+-- Works with extended wsg50 ROS package
 -- Tests showed about 20Hz rate
 
 cmd.register(0xB0); -- Measure only
