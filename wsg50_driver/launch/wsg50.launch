@@ -14,7 +14,7 @@
 
     <param name="gripper_description" command="$(find xacro)/xacro --inorder '$(find wsg50_description)/urdf/wsg50_$(arg size).urdf.xacro'"/>
 
-    <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg50" output="screen">
+    <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg50_driver" output="screen">
         <param name="size" value="$(arg size)"/>
         <param name="ip" value="$(arg ip)"/>
         <param name="port" value="$(arg port)"/>
