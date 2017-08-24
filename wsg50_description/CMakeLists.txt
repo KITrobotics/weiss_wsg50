@@ -17,7 +17,7 @@ catkin_package(
 ## Install ##
 #############
 
-install(DIRECTORY urdf meshes
+install(DIRECTORY urdf meshes test
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
@@ -25,4 +25,4 @@ install(DIRECTORY urdf meshes
 ## Testing ##
 #############
 
-# roslaunch_add_file_check(test/roslaunch_test.xml)
+roslaunch_add_file_check(test/roslaunch_test.xml)
