@@ -9,12 +9,24 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   std_srvs
   wsg50_common
+  hardware_interface
+  wsg50_grasping_controller
+  posvel_controllers
+  controller_manager
 )
 
 catkin_package(
 #   INCLUDE_DIRS include
 #  LIBRARIES vh_pixelmap
-  CATKIN_DEPENDS roscpp std_msgs std_srvs wsg50_common
+  CATKIN_DEPENDS 
+  roscpp 
+  std_msgs 
+  std_srvs 
+  wsg50_common 
+  hardware_interface
+  wsg50_grasping_controller
+  posvel_controllers
+  controller_manager
 #  DEPENDS system_lib
 )
 
@@ -29,7 +41,7 @@ set(DRIVER_SOURCES
   src/common.cpp include/wsg50/common.h
   src/functions.cpp include/wsg50/functions.h
   src/interface.cpp include/wsg50/interface.h
-  src/main.cpp
+#   src/main.cpp
   src/msg.c include/wsg50/msg.h
   src/serial.c include/wsg50/serial.h
   src/tcp.c include/wsg50/tcp.h
@@ -67,6 +79,11 @@ endif()
 add_executable(wsg50 src/main.cpp ${DRIVER_SOURCES})
 target_link_libraries(wsg50 ${catkin_LIBRARIES})
 add_dependencies(wsg50 wsg50_common_gencpp)
+
+add_executable(wsg50_layer src/wsg50_layer.cpp ${DRIVER_SOURCES})
+target_link_libraries(wsg50_layer ${catkin_LIBRARIES})
+add_dependencies(wsg50_layer wsg50_common_gencpp)
+
 
 #add_executable(wsg50_can src/main_can.cpp src/checksum.cpp src/msg.c src/common.cpp src/functions_can.cpp)
 #add_executable(wsg50_can src/main_can.cpp ${DRIVER_SOURCES_CAN})
