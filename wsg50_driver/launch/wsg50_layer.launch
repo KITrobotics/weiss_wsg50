@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- upload robot_description -->
+<!--   <param name="robot_description" command="$(find xacro)/xacro.py '$(find schunk_sdh)/urdf/sdh.urdf.xacro'" /> -->
+
+  <!-- start robot_state_publisher -->
+  <!--<node ns="sdh" pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="50.0" />
+      <param name="tf_prefix" type="string" value="" />
+      <remap from="joint_states" to="/sdh/driver/joint_states"/>
+  </node>-->
+ 
+    
+    <arg name="size" default="210" />
+    <arg name="ip" default="192.168.1.20" />
+    <arg name="port" default="1000" />
+    <arg name="local_port" default="" />
+    <arg name="serial_port" default="" />
+    <arg name="serial_baudrate" default="" />
+    <arg name="protocol" default="" />
+    <arg name="com_mode" default="" />
+    <arg name="rate" default="" />
+    <arg name="grasping_force" default="" />
+
+    <param name="gripper_description" command="$(find xacro)/xacro --inorder '$(find wsg50_description)/urdf/wsg50_$(arg size).urdf.xacro'"/>
+
+    <node name="wsg50_driver"  pkg="wsg50_driver" type="wsg50_layer" output="screen">
+        <param name="size" value="$(arg size)"/>
+        <param name="ip" value="$(arg ip)"/>
+        <param name="port" value="$(arg port)"/>
+        <param name="local_port" value="$(arg local_port)"/>
+        <param name="serial_port" value="/dev/ttyS1"/>
+        <param name="serial_baudrate" value="115200"/>
+        <param name="protocol" value="serial"/>
+        <param name="com_mode" value="$(arg com_mode)"/>
+        <param name="rate" value="10"/>
+        <param name="grasping_force" value="$(arg grasping_force)"/>
+    </node>
+    
+    <rosparam ns="wsg50_driver" command="load" file="$(find wsg50_driver)/config/wsg50_controller.yaml" />
+ 
+    <node ns="wsg50_driver" name="wsg50_controller_spawner" pkg="controller_manager" type="spawner" args="joint_state_controller wsg50_grasping_controller --shutdown-timeout 1" respawn="false" output="screen"/>
+    <node ns="wsg50_driver" name="wsg50_controller_loader" pkg="controller_manager" type="controller_manager" args="load joint_posvel_controller" respawn="false" output="screen"/>
+ 
+<!--     <rosparam command="load" ns="/script_server/sdh" file="$(find schunk_sdh)/config/sdh_joint_configurations.yaml"/> -->
+
+</launch>

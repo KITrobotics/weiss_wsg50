@@ -296,9 +296,9 @@ void timer_cb(const ros::TimerEvent& ev)
         if (!state)
             return;
         info.state_text = std::string(state);
-		info.position = getOpening();
-		info.acceleration = getAcceleration();
-		info.f_motor = getForce();//getGraspingForce();
+	info.position = getOpening();
+	info.acceleration = getAcceleration();
+	info.f_motor = getForce();//getGraspingForce();
 
     } else if (g_mode_script) {
 		// ==== Call custom measure-and-move command ====
@@ -331,9 +331,9 @@ void timer_cb(const ros::TimerEvent& ev)
     } else
         return;
 
-	publish_status_and_joint_states(info);
+    publish_status_and_joint_states(info);
 
-	// printf("Timer, last duration: %6.1f\n", ev.profile.last_duration.toSec() * 1000.0);
+    // printf("Timer, last duration: %6.1f\n", ev.profile.last_duration.toSec() * 1000.0);
 }
 
 /** \brief Reads gripper responses in auto_update mode. The gripper pushes state messages in regular intervals. */
@@ -600,18 +600,18 @@ int main( int argc, char **argv )
 
         ros::spin();
 
-	} else {
-        ROS_ERROR("Unable to connect, please check the port and address used.");
-	}
+    } else {
+    ROS_ERROR("Unable to connect, please check the port and address used.");
+    }
 
-   ROS_INFO("Exiting...");
-   g_mode_periodic = false;
-   g_mode_script = false;
-   g_mode_polling = false;
-   sleep(1);
-   cmd_disconnect();
+    ROS_INFO("Exiting...");
+    g_mode_periodic = false;
+    g_mode_script = false;
+    g_mode_polling = false;
+    sleep(1);
+    cmd_disconnect();
 
-	return 0;
+    return 0;
 
 }
 
