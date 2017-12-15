@@ -6,7 +6,7 @@
     <include file="$(find wsg50_driver)/launch/wsg50.launch">
         <arg name="size" value="$(arg size)"/>
         <arg name="protocol" value="tcp"/>
-        <arg name="ip" value="192.168.1.20"/>
+        <arg name="ip" value="192.168.0.20"/>
         <arg name="port" value="1000"/>
         <arg name="rate" value="50"/>
     </include>

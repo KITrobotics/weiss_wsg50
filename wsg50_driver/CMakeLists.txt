@@ -23,7 +23,7 @@ catkin_package(
 
 
 # WSG_50_TCP version
-set(DRIVER_SOURCES 
+set(DRIVER_SOURCES
   src/checksum.cpp include/wsg50/checksum.h
   src/cmd.c include/wsg50/cmd.h
   src/common.cpp include/wsg50/common.h
@@ -76,4 +76,11 @@ add_dependencies(wsg50 wsg50_common_gencpp)
 #add_compile_flags(wsg50_can -g -Wall)
 #target_link_libraries(wsg50_can pcan)
 
-
+#############
+## Install ##
+#############
+install(
+  TARGETS wsg50
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
