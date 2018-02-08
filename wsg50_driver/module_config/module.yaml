@@ -1,0 +1,8 @@
+name: "WSG50 Gripper"
+description: "WSG50 Gripper"
+type: gripper/wsg50
+package: wsg50_driver
+nodes:
+  - node_callerid: /wsg50_driver
+    type: wsg50
+yaml_config_folder: module_config/yaml
