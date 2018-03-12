@@ -605,25 +605,27 @@ int main( int argc, char **argv )
 			setGraspingForceLimit(grasping_force);
 		}
 
-        ROS_INFO("Init done. Starting timer/thread with target rate %.1f.", rate);
-        std::thread th;
-        ros::Timer tmr;
-        if (g_mode_polling || g_mode_script)
-            tmr = nh.createTimer(ros::Duration(1.0/rate), timer_cb);
-        if (g_mode_periodic)
-             th = std::thread(read_thread, (int)(1000.0/rate));
+    ROS_INFO("Init done. Starting timer/thread with target rate %.1f.", rate);
+    std::thread th;
+    ros::Timer tmr;
+    if (g_mode_polling || g_mode_script)
+        tmr = nh.createTimer(ros::Duration(1.0/rate), timer_cb);
+    if (g_mode_periodic)
+         th = std::thread(read_thread, (int)(1000.0/rate));
 
-        ros::spin();
+    ros::spin();
 
 	} else {
         ROS_ERROR("Unable to connect, please check the port and address used.");
         // Set component status to running
+        dnb_msgs::ComponentStatus cstatus_msg;
         cstatus_msg.status_id = 4;
         cstatus_msg.status_msg = "Unable to connect, please check the port and address used.";
         component_status.publish(cstatus_msg);
 	}
 
    // Set component status to running
+   dnb_msgs::ComponentStatus cstatus_msg;
    cstatus_msg.status_id = 1;
    cstatus_msg.status_msg = "WSG50 driver was stopped";
    component_status.publish(cstatus_msg);
