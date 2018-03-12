@@ -58,6 +58,7 @@
 #include "wsg50_common/Conf.h"
 #include "wsg50_common/Incr.h"
 #include "wsg50_common/Cmd.h"
+#include "dnb_msgs/ComponentStatus.h"
 
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Float32.h"
@@ -83,10 +84,11 @@ float increment;
 bool objectGraspped;
 
 ros::Publisher g_pub_state, g_pub_joint, g_pub_moving;
+ros::Publisher component_status;
 int g_timer_cnt = 0, g_size;
 bool g_ismoving = false, g_mode_script = false, g_mode_periodic = false, g_mode_polling = false;
 float g_goal_position = NAN, g_goal_speed = NAN, g_speed = 10.0;
-   
+
 //------------------------------------------------------------------------
 // Unit testing
 //------------------------------------------------------------------------
@@ -169,9 +171,9 @@ bool graspSrv(wsg50_common::Move::Request &req, wsg50_common::Move::Response &re
 bool incrementSrv(wsg50_common::Incr::Request &req, wsg50_common::Incr::Response &res)
 {
 	if (req.direction == "open"){
-	
+
 		if (!objectGraspped){
-		
+
 			float currentWidth = getOpening();
 			float nextWidth = currentWidth + req.increment;
 			if ( (currentWidth < g_size) && nextWidth < g_size ){
@@ -189,12 +191,12 @@ bool incrementSrv(wsg50_common::Incr::Request &req, wsg50_common::Incr::Response
 			objectGraspped = false;
 		}
 	}else if (req.direction == "close"){
-	
+
 		if (!objectGraspped){
 
 			float currentWidth = getOpening();
 			float nextWidth = currentWidth - req.increment;
-		
+
 			if ( (currentWidth > GRIPPER_MIN_OPEN) && nextWidth > GRIPPER_MIN_OPEN ){
 				//grasp(nextWidth, 1);
 				move(nextWidth,20, true);
@@ -385,7 +387,7 @@ void read_thread(int interval_ms)
         }
 
         // Handle response types
-        int motion = -1;  
+        int motion = -1;
         switch (msg.id) {
         /*** Opening ***/
         case 0x43:
@@ -552,6 +554,7 @@ int main( int argc, char **argv )
     }
    if (res_con == 0 ) {
         ROS_INFO("Gripper connection established");
+        //pub
 
 		// Services
         ros::ServiceServer moveSS, graspSS, releaseSS, homingSS, stopSS, ackSS, incrementSS, setAccSS, setForceSS;
@@ -577,13 +580,25 @@ int main( int argc, char **argv )
             sub_speed = nh.subscribe("goal_speed", 5, speed_cb);
 
 		// Publisher
+    component_status = nh.advertise<dnb_msgs::ComponentStatus>("component/status", 10);
 		g_pub_state = nh.advertise<wsg50_common::Status>("status", 1000);
 		g_pub_joint = nh.advertise<sensor_msgs::JointState>("/joint_states", 10);
         if (g_mode_script || g_mode_periodic)
             g_pub_moving = nh.advertise<std_msgs::Bool>("moving", 10);
 
-		ROS_INFO("Ready to use, homing now...");
+    // Set component status to initialized
+    dnb_msgs::ComponentStatus cstatus_msg;
+    cstatus_msg.status_id = 0;
+    cstatus_msg.status_msg = "WSG50 initialized";
+    component_status.publish(cstatus_msg);
+
+    ROS_INFO("Ready to use, homing now...");
 		homing();
+
+    // Set component status to running
+    cstatus_msg.status_id = 2;
+    cstatus_msg.status_msg = "WSG50 was homed and is running";
+    component_status.publish(cstatus_msg);
 
 		if (grasping_force > 0.0) {
 			ROS_INFO("Setting grasping force limit to %5.1f", grasping_force);
@@ -602,7 +617,16 @@ int main( int argc, char **argv )
 
 	} else {
         ROS_ERROR("Unable to connect, please check the port and address used.");
+        // Set component status to running
+        cstatus_msg.status_id = 4;
+        cstatus_msg.status_msg = "Unable to connect, please check the port and address used.";
+        component_status.publish(cstatus_msg);
 	}
+
+   // Set component status to running
+   cstatus_msg.status_id = 1;
+   cstatus_msg.status_msg = "WSG50 driver was stopped";
+   component_status.publish(cstatus_msg);
 
    ROS_INFO("Exiting...");
    g_mode_periodic = false;
