@@ -76,4 +76,12 @@ add_dependencies(wsg50 wsg50_common_gencpp)
 #add_compile_flags(wsg50_can -g -Wall)
 #target_link_libraries(wsg50_can pcan)
 
-
+#############
+## Install ##
+#############
+install(
+  TARGETS wsg50
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY module_config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

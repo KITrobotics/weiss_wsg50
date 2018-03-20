@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="ip" default="172.31.1.20"/>
+  <arg name="size" default="110"/>
+
+  <include file="$(find wsg50_driver)/launch/wsg50.launch">
+      <arg name="size" value="$(arg size)"/>
+      <arg name="protocol" value="tcp"/>
+      <arg name="ip" value="$(arg ip)"/>
+      <arg name="port" value="1000"/>
+      <arg name="rate" value="50"/>
+  </include>
+
+    <node name="register_wsg50_driver" pkg="dnb_component_manager" type="register.py"
+args="$(find wsg50_driver)/module_config/module.yaml" />
+
+</launch>
