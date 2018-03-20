@@ -6,5 +6,5 @@ configuration:
 - datatype: string
   name: size
   namespace: ''
-  value: '110'
-status_topic: /wsg50_driver/component/status
+  value: '210'
+status_topic: '/wsg50_driver/component/status'
