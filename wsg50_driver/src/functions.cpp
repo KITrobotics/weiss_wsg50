@@ -368,7 +368,9 @@ int script_measure_move (unsigned char cmd_type, float cmd_width, float cmd_spee
 		unsigned char resp_state[6] = {0,0,0,0,0,0};
 		resp_state[2] = resp[2];
 		info.state = resp[2];					 off+=1;
-		info.state_text = std::string(getStateValues(resp_state));
+		char a[1024];
+		getStateValues(resp_state, a);
+		info.state_text = std::string(a);
 		info.position = convert(&resp[off]);     off+=4;
 		info.speed = convert(&resp[off]);        off+=4;
 		info.f_motor = convert(&resp[off]);      off+=4;
@@ -474,7 +476,7 @@ int setGraspingForceLimit( float force )
 ///////////////////
 
 
-const char * systemState( void ) 
+void systemState(std::string& state)
 {
 	status_t status;
 	int res;
@@ -491,7 +493,7 @@ const char * systemState( void )
 	{
 		dbgPrint( "Response payload length doesn't match (is %d, expected 6)\n", res );
 		if ( res > 0 ) free( resp );
-		return 0;
+		return;
 	}
 
 	// Check response status
@@ -503,21 +505,12 @@ const char * systemState( void )
 	dbgPrint("       resp[2]: %x\n", resp[4]);
 	dbgPrint("MSB -> resp[3]: %x\n", resp[5]);
 	*/
+	
+	char a[1024];
+	// Spaeter durch std::memcpy ersetzen um Groeße variabel zu halten
 
-	return getStateValues(resp);
-
-	if ( status != E_SUCCESS )
-	{
-		dbgPrint( "Command GET SYSTEM STATE not successful: %s\n", status_to_str( status ) );
-		free( resp );
-		return 0;
-	}
-
-	free( resp );
-
-    return 0;
-
-	//return (int) resp[2]; MBJ
+	getStateValues(resp, a);	
+	state = std::string(a);
 }
 
 

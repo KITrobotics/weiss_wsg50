@@ -292,10 +292,11 @@ void timer_cb(const ros::TimerEvent& ev)
 	info.speed = 0.0;
 
     if (g_mode_polling) {
-        const char * state = systemState();
-        if (!state)
+	std::string state;
+	systemState(state);
+        if (state.empty())
             return;
-        info.state_text = std::string(state);
+        info.state_text = state;
 		info.position = getOpening();
 		info.acceleration = getAcceleration();
 		info.f_motor = getForce();//getGraspingForce();

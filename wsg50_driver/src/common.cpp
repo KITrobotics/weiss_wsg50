@@ -171,9 +171,11 @@ void quit( const char *reason )
 }
 
 
-const char * getStateValues( unsigned char *b ){
-
-	/*
+void getStateValues( unsigned char *b,  char *state)
+{
+//	char string[] = "test";
+//	dbgPrint("%s\n",string);
+  /*
 	unsigned char aux[4]; 
 
 	
@@ -284,13 +286,7 @@ const char * getStateValues( unsigned char *b ){
 		strcat(resp, aux20);
 	}
 
-	// [D21 - D31] RESERVED
-	
-	// D31 ==> MSB
-
-	//dbgPrint("%s\n", resp);
-	return resp;
-}
+	strcpy(state,resp);}
 
 
 //------------------------------------------------------------------------
