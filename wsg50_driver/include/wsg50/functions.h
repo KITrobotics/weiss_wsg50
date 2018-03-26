@@ -76,7 +76,7 @@ int ack_fault( void );
 int setAcceleration( float acc );
 int setGraspingForceLimit( float force );
 
-const char * systemState( void );
+void systemState(std::string& state);
 int graspingState( void );
 float getOpening(int auto_update = 0);
 float getForce(int auto_update = 0);
