@@ -2,7 +2,7 @@ package: wsg50_driver
 components:
   - name: "WSG50 Gripper"
     description: "WSG50 Gripper"
-    type: gripper/wsg50
+    type: driver/gripper/weiss/wsg50
     roslaunch: start.launch
     configuration:
       - datatype: string
