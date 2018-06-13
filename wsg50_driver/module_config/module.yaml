@@ -1,8 +1,20 @@
-name: "WSG50 Gripper"
-description: "WSG50 Gripper"
-type: gripper/wsg50
 package: wsg50_driver
+components:
+  - name: "WSG50 Gripper"
+    description: "WSG50 Gripper"
+    type: driver/gripper/weiss/wsg50
+    roslaunch: start.launch
+    configuration:
+    - datatype: string
+      name: ip
+      namespace: ''
+      default: 192.168.0.20
+    - datatype: string
+      name: size
+      namespace: ''
+      default: '110'
 nodes:
   - node_callerid: /wsg50_driver
     type: wsg50
 yaml_config_folder: module_config/yaml
+status_topic: /wsg50_driver/component/status
