@@ -6,6 +6,7 @@ project(wsg50_driver)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  roslaunch
   std_msgs
   std_srvs
   wsg50_common
@@ -22,7 +23,7 @@ catkin_package(
 # find_package(Boost REQUIRED COMPONENTS system)
 
 
-# WSG_50_TCP version
+# WSG50_TCP version
 set(DRIVER_SOURCES 
   src/checksum.cpp include/wsg50/checksum.h
   src/cmd.c include/wsg50/cmd.h
@@ -35,7 +36,7 @@ set(DRIVER_SOURCES
   src/tcp.c include/wsg50/tcp.h
   src/udp.c include/wsg50/udp.h)
 
-# WSG_50_CAN version
+# WSG50_CAN version
 set(DRIVER_SOURCES_CAN
   src/checksum.cpp
   src/common.cpp
@@ -64,16 +65,42 @@ else()
     message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-add_executable(wsg50 src/main.cpp ${DRIVER_SOURCES})
-target_link_libraries(wsg50 ${catkin_LIBRARIES})
-add_dependencies(wsg50 wsg50_common_gencpp)
+add_executable(${PROJECT_NAME} src/main.cpp ${DRIVER_SOURCES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(${PROJECT_NAME} wsg50_common_gencpp)
 
-#add_executable(wsg50_can src/main_can.cpp src/checksum.cpp src/msg.c src/common.cpp src/functions_can.cpp)
-#add_executable(wsg50_can src/main_can.cpp ${DRIVER_SOURCES_CAN})
+# add_executable(${PROJECT_NAME}_can src/main_can.cpp src/checksum.cpp src/msg.c src/common.cpp src/functions_can.cpp)
+# add_executable(${PROJECT_NAME}_can src/main_can.cpp ${DRIVER_SOURCES_CAN})
 
 #include_directories(/home/marc/peak-linux-driver-7.5/driver/src/)
 #link_directories(/home/marc/peak-linux-driver-7.5/lib/)
-#add_compile_flags(wsg50_can -g -Wall)
-#target_link_libraries(wsg50_can pcan)
+#add_compile_flags(${PROJECT_NAME}_can -g -Wall)
+#target_link_libraries(${PROJECT_NAME}_can pcan)
+
+#############
+## Install ##
+#############
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
+install(DIRECTORY launch test
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+#############
+## Testing ##
+#############
+
+roslaunch_add_file_check(test/roslaunch_test.xml)
+
+
 
 

@@ -1,0 +1,40 @@
+<launch>
+
+<!--  <group ns="test_wsg50_driver_can_210_">
+    <include file="$(find wsg50_driver)/launch/wsg50_can.launch">
+        <arg name="size" value="210" />
+    </include>
+  </group>
+
+  <group ns="test_wsg50_driver_can_110_">
+    <include file="$(find wsg50_driver)/launch/wsg50_can.launch">
+        <arg name="size" value="110" />
+    </include>
+  </group>-->
+
+  <group ns="test_wsg50_driver_serial_210_">
+    <include file="$(find wsg50_driver)/launch/wsg50_serial.launch">
+        <arg name="size" value="210" />
+    </include>
+  </group>
+
+  <group ns="test_wsg50_driver_serial_110_">
+    <include file="$(find wsg50_driver)/launch/wsg50_serial.launch">
+        <arg name="size" value="110" />
+    </include>
+  </group>
+
+  <group ns="test_wsg50_driver_tcp_210_">
+    <include file="$(find wsg50_driver)/launch/wsg50_tcp.launch">
+        <arg name="size" value="210" />
+    </include>
+  </group>
+
+  <group ns="test_wsg50_driver_tcp_110_">
+    <include file="$(find wsg50_driver)/launch/wsg50_tcp.launch">
+        <arg name="size" value="110" />
+    </include>
+  </group>
+
+</launch>
+
